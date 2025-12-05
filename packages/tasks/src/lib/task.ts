@@ -4,7 +4,7 @@ export const createNewTask = (
 ) => {
   return new Promise<void>((resolve, reject) => {
     setTimeout(() => {
-      if (Math.random() <= failureChance / 100) {
+      if (Math.random() * 100 <= failureChance) {
         reject(new Error('failed to complete task'));
       } else {
         resolve();
