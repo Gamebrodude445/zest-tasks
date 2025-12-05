@@ -6,8 +6,19 @@ import AutoLoad from '@fastify/autoload';
 export interface AppOptions {}
 
 export async function app(fastify: FastifyInstance, opts: AppOptions) {
-  // Place here your custom code!
+  await fastify.register(import('@fastify/swagger'), {
+    openapi: {
+      info: {
+        title: 'Tasks API',
+        description: 'API for managing tasks',
+        version: '1.0.0',
+      },
+    },
+  });
 
+  await fastify.register(import('@fastify/swagger-ui'), {
+    routePrefix: '/docs',
+  });
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
