@@ -1,1 +1,1 @@
-export default 6;
+export { createNewTask } from './lib';
