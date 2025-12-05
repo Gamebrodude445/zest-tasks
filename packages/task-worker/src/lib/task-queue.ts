@@ -15,6 +15,7 @@ export class TaskQueue {
   private _onComplete: (task: Task) => void;
   private _onFail: (task: Task) => void;
   private _noWorkersDelay: number;
+  private _isBusy = false;
 
   constructor({
     maxWorkers,
@@ -59,9 +60,15 @@ export class TaskQueue {
         );
       }
     }
+    this._isBusy = false;
   }
 
   async process() {
+    this._isBusy = true;
     await this._processQueue();
+  }
+
+  isBusy(): boolean {
+    return this._isBusy;
   }
 }

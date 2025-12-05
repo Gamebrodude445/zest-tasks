@@ -1,1 +1,1 @@
-export * from './lib/log-writer-reader.js';
+export default 6;

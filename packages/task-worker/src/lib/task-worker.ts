@@ -11,7 +11,8 @@ export class TaskWorker {
   private _timeToComplete: number;
   private _failureChance: number;
   private _maxRetries: number;
-  private _isBusy: boolean = false;
+  private _isBusy = false;
+
   constructor({
     timeToComplete,
     failureChance,
@@ -39,7 +40,7 @@ export class TaskWorker {
           this._failureChance
         );
         break;
-      } catch (error) {
+      } catch {
         attempts++;
         if (attempts >= this._maxRetries) {
           onFail(task.id);
