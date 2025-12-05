@@ -8,6 +8,9 @@
     },
     {
       "path": "./packages/tasks"
+    },
+    {
+      "path": "./packages/task-worker"
     }
   ]
 }
