@@ -35,4 +35,4 @@ export const app = async (fastify: FastifyInstance, opts: AppOptions) => {
     dir: path.join(__dirname, 'routes'),
     options: { ...opts },
   });
-}
+};
