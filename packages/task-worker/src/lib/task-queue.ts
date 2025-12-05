@@ -6,48 +6,55 @@ type TaskQueueOptions = {
   workerSettings: ConstructorParameters<typeof TaskWorker>[0];
   onComplete: (task: Task) => void;
   onFail: (task: Task) => void;
+  noWorkersDelay: number;
 };
 
 export class TaskQueue {
-  private workers: TaskWorker[] = [];
-  private taskQueue: Task[] = [];
-  private onComplete: (task: Task) => void;
-  private onFail: (task: Task) => void;
+  private _workers: TaskWorker[] = [];
+  private _taskQueue: Task[] = [];
+  private _onComplete: (task: Task) => void;
+  private _onFail: (task: Task) => void;
+  private _noWorkersDelay: number;
 
   constructor({
     maxWorkers,
     workerSettings,
     onComplete,
     onFail,
+    noWorkersDelay,
   }: TaskQueueOptions) {
     for (let i = 0; i < maxWorkers; i++) {
-      this.workers.push(new TaskWorker(workerSettings));
+      this._workers.push(new TaskWorker(workerSettings));
     }
-    this.onComplete = onComplete;
-    this.onFail = onFail;
+    this._onComplete = onComplete;
+    this._onFail = onFail;
+    this._noWorkersDelay = noWorkersDelay;
   }
 
   addTask(task: Task) {
-    this.taskQueue.push(task);
+    this._taskQueue.push(task);
   }
 
-  private async processQueue() {
-    while (this.taskQueue.length > 0) {
-      const availableWorker = this.workers.find((worker) => !worker.isBusy());
+  private async _processQueue() {
+    while (this._taskQueue.length > 0) {
+      const availableWorker = this._workers.find((worker) => !worker.isBusy());
 
       if (!availableWorker) {
-        break;
+        await new Promise((resolve) =>
+          setTimeout(resolve, this._noWorkersDelay)
+        );
+        continue;
       }
 
-      const task = this.taskQueue.shift();
+      const task = this._taskQueue.shift();
       if (task) {
         await availableWorker.execute(
           task,
           () => {
-            this.onComplete(task);
+            this._onComplete(task);
           },
           () => {
-            this.onFail(task);
+            this._onFail(task);
           }
         );
       }
@@ -55,6 +62,6 @@ export class TaskQueue {
   }
 
   async process() {
-    await this.processQueue();
+    await this._processQueue();
   }
 }
