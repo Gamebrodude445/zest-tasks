@@ -11,6 +11,9 @@
     },
     {
       "path": "./packages/task-worker"
+    },
+    {
+      "path": "./packages/logger"
     }
   ]
 }

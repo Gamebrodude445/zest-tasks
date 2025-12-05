@@ -25,7 +25,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["packages/tasks/*", "packages/task-worker/*"]
+      "exclude": [
+        "packages/tasks/*",
+        "packages/task-worker/*",
+        "packages/logger/*"
+      ]
     },
     {
       "plugin": "@nx/eslint/plugin",
@@ -46,7 +50,11 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["packages/tasks/*", "packages/task-worker/*"],
+      "include": [
+        "packages/tasks/*",
+        "packages/task-worker/*",
+        "packages/logger/*"
+      ],
       "options": {
         "typecheck": {
           "targetName": "typecheck"
