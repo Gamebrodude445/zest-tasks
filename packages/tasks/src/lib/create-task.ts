@@ -1,5 +1,7 @@
+import { CreateTaskParameters } from './types/create-task';
+
 export const createNewTask = (
-  id: string,
+  { id }: CreateTaskParameters,
   onComplete: (id: string) => void,
   timeToComplete: number,
   failureChance: number

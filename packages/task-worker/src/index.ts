@@ -1,1 +1,1 @@
-export * from './lib/task-worker.js';
+export { type Task } from './lib/types/task';
