@@ -5,6 +5,12 @@
   "references": [
     {
       "path": "./apps/tasks-api"
+    },
+    {
+      "path": "./packages/tasks"
+    },
+    {
+      "path": "./packages/task-worker"
     }
   ]
 }

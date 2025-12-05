@@ -5,7 +5,7 @@ import AutoLoad from '@fastify/autoload';
 /* eslint-disable-next-line */
 export interface AppOptions {}
 
-export async function app(fastify: FastifyInstance, opts: AppOptions) {
+export const app = async (fastify: FastifyInstance, opts: AppOptions) => {
   await fastify.register(import('@fastify/swagger'), {
     openapi: {
       info: {
@@ -35,4 +35,4 @@ export async function app(fastify: FastifyInstance, opts: AppOptions) {
     dir: path.join(__dirname, 'routes'),
     options: { ...opts },
   });
-}
+};

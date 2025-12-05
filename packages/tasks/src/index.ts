@@ -1,0 +1,1 @@
+export { createNewTask } from './lib';
