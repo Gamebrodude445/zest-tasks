@@ -10,6 +10,8 @@ type TaskQueueOptions = {
 };
 
 export class TaskQueue {
+  private _maxWorkers: number;
+  private _workerSettings: TaskQueueOptions['workerSettings'];
   private _workers: TaskWorker[] = [];
   private _taskQueue: Task[] = [];
   private _onComplete: (task: Task) => void;
@@ -24,21 +26,24 @@ export class TaskQueue {
     onFail,
     noWorkersDelay,
   }: TaskQueueOptions) {
-    for (let i = 0; i < maxWorkers; i++) {
-      this._workers.push(new TaskWorker(workerSettings));
-    }
+    this._maxWorkers = maxWorkers;
+    this._workerSettings = workerSettings;
     this._onComplete = onComplete;
     this._onFail = onFail;
     this._noWorkersDelay = noWorkersDelay;
   }
 
-  addTask(task: Task) {
+  addTask = (task: Task) => {
     this._taskQueue.push(task);
-  }
+  };
 
-  private async _processQueue() {
+  private _processQueue = async () => {
     while (this._taskQueue.length > 0) {
-      const availableWorker = this._workers.find((worker) => !worker.isBusy());
+      this.clearDeletedWorkers();
+      const availableWorker =
+        this._workers.length <= this._maxWorkers
+          ? new TaskWorker(this._workerSettings)
+          : this._workers.find((worker) => !worker.isBusy());
 
       if (!availableWorker) {
         await new Promise((resolve) =>
@@ -60,15 +65,20 @@ export class TaskQueue {
         );
       }
     }
+    this.clearDeletedWorkers();
     this._isBusy = false;
-  }
+  };
 
-  async process() {
+  clearDeletedWorkers = () => {
+    this._workers = this._workers.filter((worker) => !worker.isDeleted());
+  };
+
+  process = async () => {
     this._isBusy = true;
     await this._processQueue();
-  }
+  };
 
-  isBusy(): boolean {
+  isBusy = () => {
     return this._isBusy;
-  }
+  };
 }
