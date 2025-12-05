@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 
-export default async function (fastify: FastifyInstance) {
+export default async (fastify: FastifyInstance) => {
   fastify.get('/health', {
     schema: {
       description: 'Health check endpoint',
@@ -16,7 +16,7 @@ export default async function (fastify: FastifyInstance) {
         }
       }
     }
-  }, async function () {
+  }, async () => {
     return {
       message: 'Server is running',
       status: 'ok',

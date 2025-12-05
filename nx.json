@@ -24,7 +24,8 @@
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
         }
-      }
+      },
+      "exclude": ["packages/tasks/*"]
     },
     {
       "plugin": "@nx/eslint/plugin",
@@ -40,6 +41,15 @@
         },
         "runTarget": {
           "name": "docker:run"
+        }
+      }
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "include": ["packages/tasks/*"],
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
         }
       }
     }
