@@ -1,5 +1,5 @@
 {
-  "name": "@zest-tasks/logger",
+  "name": "@zest-tasks/log-file-io",
   "version": "0.0.1",
   "private": true,
   "main": "./src/index.ts",
@@ -13,7 +13,7 @@
     "./package.json": "./package.json"
   },
   "nx": {
-    "name": "logger"
+    "name": "log-file-io"
   },
   "dependencies": {}
 }

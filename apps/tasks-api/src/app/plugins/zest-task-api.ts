@@ -1,19 +1,20 @@
 // the Env variables below are guaranteed to be set because we check them in main.ts
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Logger } from '@zest-tasks/log-writer-reader';
+import { Logger } from '@zest-tasks/logger';
 import { TaskQueue } from '@zest-tasks/task-worker';
 import { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import os from 'node:os';
 
 export default fp(async (fastify: FastifyInstance) => {
-  const logger = new Logger({ filePath: 'logs/tasks-api.log' });
+  const logFile = new Logger({ filePath: 'logs/tasks-api.log' });
   const log = async (message: string, metadata: Record<string, unknown>) => {
-    logger.addLog(message, metadata);
-    if (!logger.isBusy()) {
-      await logger.process();
+    logFile.addLog(message, metadata);
+    if (!logFile.isBusy()) {
+      await logFile.process();
     }
   };
+  fastify.decorate('logFile', logFile);
   fastify.decorate(
     'tasks',
     /**
@@ -25,6 +26,7 @@ export default fp(async (fastify: FastifyInstance) => {
     new TaskQueue({
       maxWorkers: os.cpus()?.length || 4,
       noWorkersDelay: +process.env.NO_WORKERS_DELAY!,
+      workerCleanupInterval: +process.env.WORKER_CLEANUP_INTERVAL!,
       workerSettings: {
         timeToComplete: +process.env.TASK_SIMULATED_DURATION!,
         maxRetries: +process.env.TASK_MAX_RETRIES!,

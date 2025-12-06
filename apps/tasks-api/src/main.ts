@@ -9,6 +9,7 @@ const requiredNumericEnvVars = [
   'TASK_ERROR_RETRY_DELAY',
   'WORKER_TIMEOUT',
   'TASK_MAX_RETRIES',
+  'WORKER_CLEANUP_INTERVAL',
 ];
 const host = process.env.HOST ?? 'localhost';
 // this is safe because we check it later
