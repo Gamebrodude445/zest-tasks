@@ -1,1 +1,1 @@
-export default 6;
+export { writeToFile } from './lib/file-io';

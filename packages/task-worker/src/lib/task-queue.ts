@@ -56,8 +56,6 @@ export class TaskQueue {
       if (task) {
         const metadata = {
           workerId: availableWorker.id,
-          workersLength: this._workers.length,
-          queueLength: this._taskQueue.length,
           timeStamp: new Date().toISOString(),
           taskId: task.id,
           taskMessage: task.message,

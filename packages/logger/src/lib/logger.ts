@@ -1,3 +1,5 @@
+import { writeToFile } from '@zest-tasks/log-file-io';
+
 type LoggerOptions = { filePath: string };
 
 type LogEntry = { log: string; metadata: Record<string, unknown> };
@@ -19,8 +21,7 @@ export class Logger {
     while (this._logQueue.length > 0) {
       const log = this._logQueue.shift();
       if (log) {
-        console.log(this._filePath);
-        console.log(log.log, log.metadata);
+        await writeToFile(this._filePath, JSON.stringify({ log }));
       }
     }
     this._isBusy = false;
