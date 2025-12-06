@@ -45,6 +45,8 @@ ZestTasks is an **Nx monorepo** implementing a task queue system with the follow
 
 ## Quick Start
 
+> **💡 AI-Assisted Development**: This project includes GitHub Copilot instructions at `.github/copilot-instructions.md`. If you have GitHub Copilot enabled, you can ask questions about the architecture, conventions, and implementation details directly in Copilot Chat for instant, context-aware answers.
+
 ### Prerequisites
 
 - Node.js (LTS version recommended)
