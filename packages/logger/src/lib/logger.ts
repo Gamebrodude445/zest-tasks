@@ -13,11 +13,11 @@ export class Logger {
     this._filePath = filePath;
   }
 
-  addLog(log: string, metadata: Record<string, unknown>) {
+  addLog = (log: string, metadata: Record<string, unknown>) => {
     this._logQueue.push({ log, metadata });
-  }
+  };
 
-  private async _processQueue() {
+  private _processQueue = async () => {
     while (this._logQueue.length > 0) {
       const log = this._logQueue.shift();
       if (log) {
@@ -25,13 +25,13 @@ export class Logger {
       }
     }
     this._isBusy = false;
-  }
+  };
 
-  async process() {
+  process = async () => {
     this._isBusy = true;
     await this._processQueue();
-  }
-  isBusy(): boolean {
+  };
+  isBusy = () => {
     return this._isBusy;
-  }
+  };
 }
