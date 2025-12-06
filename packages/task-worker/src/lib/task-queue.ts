@@ -82,8 +82,8 @@ export class TaskQueue {
             this._taskAttemptCounter += runMetadata.attempts;
             this._taskSuccessAmount++;
             this._averageProcessingTime =
-              runMetadata.processingTime -
-              this._averageProcessingTime / this._lifetimeTaskCounter;
+              (runMetadata.processingTime - this._averageProcessingTime) /
+              this._lifetimeTaskCounter;
           },
           (runMetadata) => {
             this._onFail(task, metadata);
@@ -111,6 +111,7 @@ export class TaskQueue {
   };
 
   process = async () => {
+    if (this._isBusy) return;
     this._isBusy = true;
     await this._processQueue();
   };

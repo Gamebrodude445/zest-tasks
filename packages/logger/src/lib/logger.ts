@@ -21,13 +21,18 @@ export class Logger {
     while (this._logQueue.length > 0) {
       const log = this._logQueue.shift();
       if (log) {
-        await writeToFile(this._filePath, JSON.stringify({ log }));
+        try {
+          await writeToFile(this._filePath, JSON.stringify({ log }));
+        } catch {
+          console.log('Failed to write log to file.');
+        }
       }
     }
     this._isBusy = false;
   };
 
   process = async () => {
+    if (this._isBusy) return;
     this._isBusy = true;
     await this._processQueue();
   };
