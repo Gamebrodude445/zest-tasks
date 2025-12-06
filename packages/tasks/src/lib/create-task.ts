@@ -1,7 +1,7 @@
 import { CreateTaskParameters } from './types/create-task';
 
 export const createNewTask = (
-  { id }: CreateTaskParameters,
+  Task: CreateTaskParameters,
   onComplete: () => void,
   timeToComplete: number,
   failureChance: number
@@ -9,7 +9,7 @@ export const createNewTask = (
   return new Promise<void>((resolve, reject) => {
     setTimeout(() => {
       if (Math.random() * 100 <= failureChance) {
-        reject(id);
+        reject(`Task ${Task.id} failed due to simulated error.`);
       } else {
         onComplete();
         resolve();
