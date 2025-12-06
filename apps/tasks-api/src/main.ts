@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import { app } from './app/app';
 
-const requiredEnvVars = [
+const requiredNumericEnvVars = [
   'NO_WORKERS_DELAY',
   'SERVER_PORT',
   'TASK_SIMULATED_DURATION',
@@ -21,11 +21,16 @@ const server = Fastify({});
 // Register your application as a normal plugin.
 server.register(app);
 
-const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+const missingEnvVars = requiredNumericEnvVars.filter((envVar) => {
+  const value = process.env[envVar];
+  return !value || isNaN(Number(value));
+});
 
 if (missingEnvVars.length > 0) {
   console.error(
-    `Missing required environment variables: ${missingEnvVars.join(', ')}`
+    `Missing or wrong type of required environment variables detected: ${missingEnvVars.join(
+      ', '
+    )}`
   );
   process.exit(1);
 }
