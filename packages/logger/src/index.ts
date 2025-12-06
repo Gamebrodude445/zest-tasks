@@ -1,1 +1,1 @@
-export default 6;
+export { Logger } from './lib/logger';

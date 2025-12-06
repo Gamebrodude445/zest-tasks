@@ -1,5 +1,6 @@
-import { Task } from './types/task';
 import { createNewTask } from '@zest-tasks/tasks';
+import { v4 } from 'uuid';
+import { Task } from './types/task';
 
 type TaskWorkerOptions = {
   timeToComplete: number;
@@ -16,6 +17,7 @@ export class TaskWorker {
   private _idleTimeout: number;
   private _idleTimer: NodeJS.Timeout | null = null;
   private _isDeleted = false;
+  public id: string;
 
   constructor({
     timeToComplete,
@@ -27,6 +29,7 @@ export class TaskWorker {
     this._failureChance = failureChance;
     this._maxRetries = maxRetries;
     this._idleTimeout = idleTimeout;
+    this.id = v4();
   }
 
   execute = async (
