@@ -2,7 +2,7 @@ import { CreateTaskParameters } from './types/create-task';
 
 export const createNewTask = (
   { id }: CreateTaskParameters,
-  onComplete: (id: string) => void,
+  onComplete: () => void,
   timeToComplete: number,
   failureChance: number
 ) => {
@@ -11,7 +11,7 @@ export const createNewTask = (
       if (Math.random() * 100 <= failureChance) {
         reject(id);
       } else {
-        onComplete(id);
+        onComplete();
         resolve();
       }
     }, timeToComplete);
