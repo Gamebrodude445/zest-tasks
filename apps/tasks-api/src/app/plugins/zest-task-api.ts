@@ -1,3 +1,4 @@
+// the Env variables below are guaranteed to be set because we check them in main.ts
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Logger } from '@zest-tasks/log-writer-reader';
 import { TaskQueue } from '@zest-tasks/task-worker';
