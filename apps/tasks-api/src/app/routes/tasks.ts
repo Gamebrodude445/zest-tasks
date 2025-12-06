@@ -35,7 +35,7 @@ export default async (fastify: FastifyInstance) => {
       const taskId = v4();
       fastify.tasks.addTask({ id: taskId, message: request.body.message });
       if (!fastify.tasks.isBusy()) {
-        await fastify.tasks.process();
+        fastify.tasks.process();
       }
       reply.send({ taskId });
     }

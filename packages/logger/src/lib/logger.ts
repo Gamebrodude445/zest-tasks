@@ -1,16 +1,18 @@
 type LoggerOptions = { filePath: string };
 
+type LogEntry = { log: string; metadata: Record<string, unknown> };
+
 export class Logger {
   private _filePath: string;
-  private _logQueue: string[] = [];
+  private _logQueue: LogEntry[] = [];
   private _isBusy = false;
 
   constructor({ filePath }: LoggerOptions) {
     this._filePath = filePath;
   }
 
-  addLog(log: string) {
-    this._logQueue.push(log);
+  addLog(log: string, metadata: Record<string, unknown>) {
+    this._logQueue.push({ log, metadata });
   }
 
   private async _processQueue() {
@@ -18,7 +20,7 @@ export class Logger {
       const log = this._logQueue.shift();
       if (log) {
         console.log(this._filePath);
-        console.log(log);
+        console.log(log.log, log.metadata);
       }
     }
     this._isBusy = false;
