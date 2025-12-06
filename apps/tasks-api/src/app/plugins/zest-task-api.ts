@@ -26,6 +26,7 @@ export default fp(async (fastify: FastifyInstance) => {
     new TaskQueue({
       maxWorkers: os.cpus()?.length || 4,
       noWorkersDelay: +process.env.NO_WORKERS_DELAY!,
+      workerCleanupInterval: +process.env.WORKER_CLEANUP_INTERVAL!,
       workerSettings: {
         timeToComplete: +process.env.TASK_SIMULATED_DURATION!,
         maxRetries: +process.env.TASK_MAX_RETRIES!,

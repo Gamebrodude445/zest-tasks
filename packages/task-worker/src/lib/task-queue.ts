@@ -7,6 +7,7 @@ type TaskQueueOptions = {
   onComplete: (task: Task, metadata: Record<string, unknown>) => void;
   onFail: (task: Task, metadata: Record<string, unknown>) => void;
   noWorkersDelay: number;
+  workerCleanupInterval: number;
 };
 
 export class TaskQueue {
@@ -18,6 +19,8 @@ export class TaskQueue {
   private _onFail: (task: Task, metadata: Record<string, unknown>) => void;
   private _noWorkersDelay: number;
   private _isBusy = false;
+  private _workerCleanupInterval: NodeJS.Timeout;
+  private _lifetimeTaskCounter = 0;
 
   constructor({
     maxWorkers,
@@ -25,13 +28,23 @@ export class TaskQueue {
     onComplete,
     onFail,
     noWorkersDelay,
+    workerCleanupInterval,
   }: TaskQueueOptions) {
     this._maxWorkers = maxWorkers;
     this._workerSettings = workerSettings;
     this._onComplete = onComplete;
     this._onFail = onFail;
     this._noWorkersDelay = noWorkersDelay;
+    this._workerCleanupInterval = setInterval(
+      () => this.clearDeletedWorkers(),
+      workerCleanupInterval
+    );
   }
+
+  // Ecmascript does not support destructors, so i created a manual one that i won't use but it should exist
+  cleanup = () => {
+    clearInterval(this._workerCleanupInterval);
+  };
 
   addTask = (task: Task) => {
     this._taskQueue.push(task);
@@ -40,9 +53,6 @@ export class TaskQueue {
   private _processQueue = async () => {
     while (this._taskQueue.length > 0) {
       this.clearDeletedWorkers();
-      if (this._workers.length < this._maxWorkers) {
-        this._workers.push(new TaskWorker(this._workerSettings));
-      }
       const availableWorker = this.getAvailableWorker();
 
       if (!availableWorker) {
@@ -64,14 +74,15 @@ export class TaskQueue {
           task,
           () => {
             this._onComplete(task, metadata);
+            this._lifetimeTaskCounter++;
           },
           () => {
             this._onFail(task, metadata);
+            this._lifetimeTaskCounter++;
           }
         );
       }
     }
-    this.clearDeletedWorkers();
     this._isBusy = false;
   };
 
@@ -95,5 +106,17 @@ export class TaskQueue {
 
   isBusy = () => {
     return this._isBusy;
+  };
+
+  getStatistics = () => {
+    return {
+      lifetimeTaskCounter: this._lifetimeTaskCounter,
+      numberOfTaskTries: 6,
+      successToFailureRation: 6,
+      averageProcessingTime: 6,
+      currentQueueLength: this._taskQueue.length,
+      idleWorkers: this._workers.filter((w) => !w.isBusy()).length,
+      hotWorkers: this._workers.filter((w) => w.isBusy()).length,
+    };
   };
 }
