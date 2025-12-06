@@ -17,6 +17,7 @@ export class Logger {
     while (this._logQueue.length > 0) {
       const log = this._logQueue.shift();
       if (log) {
+        console.log(this._filePath);
         console.log(log);
       }
     }
