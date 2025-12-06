@@ -45,16 +45,11 @@ export class TaskWorker {
     while (attempts < this._maxRetries) {
       const startTime = performance.now();
       try {
-        await createNewTask(
-          task,
-          () =>
-            onComplete({
-              attempts: ++attempts,
-              processingTime: performance.now() - startTime,
-            }),
-          this._timeToComplete,
-          this._failureChance
-        );
+        await createNewTask(task, this._timeToComplete, this._failureChance);
+        onComplete({
+          attempts: ++attempts,
+          processingTime: performance.now() - startTime,
+        });
         break;
       } catch {
         attempts++;
