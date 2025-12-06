@@ -111,6 +111,7 @@ export class TaskQueue {
   };
 
   process = async () => {
+    if (this._isBusy) return;
     this._isBusy = true;
     await this._processQueue();
   };
