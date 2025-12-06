@@ -1,0 +1,5 @@
+todo when i wake up tomorrow:
+1. fix up the code a little and make it more presentable
+2. fill all the readmes in the project
+3. comment / write in the readmes areas in the code where my technological choices might be questioned / confusing
+4. maybe polish the dockerfile and create a docker compose
