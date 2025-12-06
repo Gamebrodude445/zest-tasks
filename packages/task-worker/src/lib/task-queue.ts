@@ -21,6 +21,10 @@ export class TaskQueue {
   private _isBusy = false;
   private _workerCleanupInterval: NodeJS.Timeout;
   private _lifetimeTaskCounter = 0;
+  private _taskAttemptCounter = 0;
+  private _taskSuccessAmount = 0;
+  private _taskFailureAmount = 0;
+  private _averageProcessingTime = 0;
 
   constructor({
     maxWorkers,
@@ -72,13 +76,20 @@ export class TaskQueue {
         };
         await availableWorker.execute(
           task,
-          () => {
+          (runMetadata) => {
             this._onComplete(task, metadata);
             this._lifetimeTaskCounter++;
+            this._taskAttemptCounter += runMetadata.attempts;
+            this._taskSuccessAmount++;
+            this._averageProcessingTime =
+              runMetadata.processingTime -
+              this._averageProcessingTime / this._lifetimeTaskCounter;
           },
-          () => {
+          (runMetadata) => {
             this._onFail(task, metadata);
             this._lifetimeTaskCounter++;
+            this._taskAttemptCounter += runMetadata.attempts;
+            this._taskFailureAmount++;
           }
         );
       }
@@ -111,9 +122,10 @@ export class TaskQueue {
   getStatistics = () => {
     return {
       lifetimeTaskCounter: this._lifetimeTaskCounter,
-      numberOfTaskTries: 6,
-      successToFailureRation: 6,
-      averageProcessingTime: 6,
+      numberOfTaskTries: this._taskAttemptCounter,
+      successToFailureRatio:
+        this._taskSuccessAmount / (this._taskFailureAmount || 1),
+      averageProcessingTime: this._averageProcessingTime,
       currentQueueLength: this._taskQueue.length,
       idleWorkers: this._workers.filter((w) => !w.isBusy()).length,
       hotWorkers: this._workers.filter((w) => w.isBusy()).length,
