@@ -59,6 +59,8 @@ export class TaskQueue {
           workersLength: this._workers.length,
           queueLength: this._taskQueue.length,
           timeStamp: new Date().toISOString(),
+          taskId: task.id,
+          taskMessage: task.message,
         };
         await availableWorker.execute(
           task,

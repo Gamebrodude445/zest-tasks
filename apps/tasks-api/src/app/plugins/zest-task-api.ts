@@ -7,13 +7,14 @@ import fp from 'fastify-plugin';
 import os from 'node:os';
 
 export default fp(async (fastify: FastifyInstance) => {
-  const logger = new Logger({ filePath: 'logs/tasks-api.log' });
+  const logFile = new Logger({ filePath: 'logs/tasks-api.log' });
   const log = async (message: string, metadata: Record<string, unknown>) => {
-    logger.addLog(message, metadata);
-    if (!logger.isBusy()) {
-      await logger.process();
+    logFile.addLog(message, metadata);
+    if (!logFile.isBusy()) {
+      await logFile.process();
     }
   };
+  fastify.decorate('logFile', logFile);
   fastify.decorate(
     'tasks',
     /**

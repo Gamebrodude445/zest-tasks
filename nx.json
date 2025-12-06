@@ -28,7 +28,8 @@
       "exclude": [
         "packages/tasks/*",
         "packages/task-worker/*",
-        "packages/logger/*"
+        "packages/logger/*",
+        "packages/log-file-io/*"
       ]
     },
     {
@@ -53,7 +54,8 @@
       "include": [
         "packages/tasks/*",
         "packages/task-worker/*",
-        "packages/logger/*"
+        "packages/logger/*",
+        "packages/log-file-io/*"
       ],
       "options": {
         "typecheck": {
