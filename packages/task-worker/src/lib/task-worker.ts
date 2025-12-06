@@ -1,6 +1,7 @@
 import { createNewTask } from '@zest-tasks/tasks';
 import { v4 } from 'uuid';
-import { Task } from './types/task';
+import { type Task } from './types/task';
+import { type TaskResultMetadata } from './types/task-result-metadata';
 
 type TaskWorkerOptions = {
   timeToComplete: number;
@@ -34,18 +35,23 @@ export class TaskWorker {
 
   execute = async (
     task: Task,
-    onComplete: (id: string) => void,
-    onFail: (id: string) => void
+    onComplete: (metadata: TaskResultMetadata) => void,
+    onFail: (metdata: TaskResultMetadata) => void
   ) => {
     this._clearIdleTimer();
     this._isBusy = true;
     let attempts = 0;
 
     while (attempts < this._maxRetries) {
+      const startTime = performance.now();
       try {
         await createNewTask(
           task,
-          onComplete,
+          () =>
+            onComplete({
+              attempts: ++attempts,
+              processingTime: performance.now() - startTime,
+            }),
           this._timeToComplete,
           this._failureChance
         );
@@ -53,7 +59,7 @@ export class TaskWorker {
       } catch {
         attempts++;
         if (attempts >= this._maxRetries) {
-          onFail(task.id);
+          onFail({ attempts, processingTime: performance.now() - startTime });
         }
       }
     }
