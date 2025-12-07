@@ -216,7 +216,7 @@ npx nx g @nx/node:library --directory=packages/your-lib --buildable=false --name
 ### Minimal Use of Generics
 - Avoids complexity and readability issues associated with generics
 - Clear and explicit type definitions enhance maintainability
-- To avoid generics issues, Isolation using NX Libs allows for easy refactoring
+- To compensate for lacking generics usage, Nx libs help the project isolate and create a sort of API for each piece of the code without allowing access to internal parts
 
 ### Environment-Driven Configuration
 - All runtime behavior controlled via environment variables
