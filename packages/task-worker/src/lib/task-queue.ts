@@ -82,8 +82,9 @@ export class TaskQueue {
             this._taskAttemptCounter += runMetadata.attempts;
             this._taskSuccessAmount++;
             this._averageProcessingTime =
+              this._averageProcessingTime +
               (runMetadata.processingTime - this._averageProcessingTime) /
-              this._lifetimeTaskCounter;
+                this._lifetimeTaskCounter;
           },
           (runMetadata) => {
             this._onFail(task, metadata);
